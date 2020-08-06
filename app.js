@@ -10,6 +10,10 @@ var apiRouter = require('./routes/api')
 
 var app = express();
 
+// db
+const db = require('./db.js');
+db();
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

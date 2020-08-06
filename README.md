@@ -25,5 +25,15 @@ $ DEBUG=baemin:* npm start
 
 3. URL 설정(라우터)
 
-* 127.0.0.1:3000/
-* 127.0.0.1:3000/users
+* /api/store
+* /api/store/:id
+* /api/menu
+* /api/menu/:id
+* /order
+* /order/:id
+* /order/store/:id
+
+4. 몽고 DB 연결
+```
+$ npm install mongoose
+```
