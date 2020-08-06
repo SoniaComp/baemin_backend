@@ -1,0 +1,19 @@
+{
+  "name": "baemin_backend",
+  "version": "1.0.0",
+  "description": "to make MVP",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SoniaComp/baemin_backend.git"
+  },
+  "author": "SoniaComp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SoniaComp/baemin_backend/issues"
+  },
+  "homepage": "https://github.com/SoniaComp/baemin_backend#readme"
+}
