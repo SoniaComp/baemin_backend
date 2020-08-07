@@ -4,7 +4,9 @@ var router = express.Router();
 // 모델 불러오기
 const Store = require('../models/store')
 const Menu = require('../models/menu')
-const Image = require('../models/menu')
+const Image = require('../models/image')
+const Order = require('../models/order')
+const OrderDetail = require('../models/orderDetail')
 
 /* GET home page. */
 router.get('/store', async function (req, res, next) {
@@ -44,14 +46,13 @@ router.get('/menu', async function (req, res, next) {
 
 router.post('/menu', function (req, res, next) {
   var menu = new Menu();
-  menu.name = req.body.name; // name: { type: String, require: true }, // name char(20)
-  menu.description = req.body.description; // description: { type: String, require: true }, // description text
-  menu.original_price = req.body.original_price; // original_price: { type: Number, require: true }, // original_price int
+  menu.name = req.body.name;
+  menu.description = req.body.description;
+  menu.original_price = req.body.original_price;
   if (req.body.discounted_price) {
     menu.deiscounted_price = req.body.discounted_price
-  } // discounted_price: { type: Number, default: null },// discounted_price int
-  menu.store_id = req.body.store_id// store: {
-
+  }
+  menu.store_id = req.body.store_id
   menu.save(function (err) {
     if (err) {
       console.error(err);
@@ -73,15 +74,51 @@ router.get('/menu/store/:id', async function (req, res, next) {
 });
 
 router.post('/order', function (req, res, next) {
-  res.render('index', { title: 'Make a Order' });
+  var order = new Order();
+  order.user_id = req.body.user_id;
+  order.location = req.body.location;
+  order.location_x = req.body.location_x;
+  order.location_y = req.body.location_y;
+  order.store_id = req.body.store_id;
+
+  order.save(async function (err, obj) {
+    if (err) {
+      console.error(err);
+      res.json({ result: 'error' });
+      return;
+    }
+    res.json({ store_id: obj.id });
+  });
 });
 
-router.post('/order/:id', function (req, res, next) {
-  res.render('index', { title: `Order details about Order ${req.params.id}` });
+router.post('/order/detail', function (req, res, next) {
+  var order_detail = new OrderDetail();
+  order_detail.order_id = req.body.order_id;
+  order_detail.menu_id = req.body.menu_id;
+  order_detail.save(function (err) {
+    if (err) {
+      console.error(err);
+      res.json({ result: 'error' });
+      return;
+    }
+    res.json({ result: 'success' })
+  })
+})
+
+router.get('/order', async function (req, res, next) {
+  var order = await Order.find({});
+  res.json(order)
 });
 
-router.get('/order/store/:id', function (req, res, next) {
-  res.render('index', { title: `check store's order about Store ${req.params.id}` });
+router.get('/order/:id', async function (req, res, next) {
+  var order = await Order.findById(req.params.id);
+  var order_detail = await OrderDetail.find({ order_id: order.id })
+  res.json({ order: order, order_detail: order_detail })
+});
+
+router.get('/order/store/:id', async function (req, res, next) {
+  var order = await Order.find({ store_id: req.params.id });
+  res.json(order)
 });
 
 module.exports = router;
