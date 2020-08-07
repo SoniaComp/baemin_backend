@@ -7,8 +7,9 @@ const Menu = require('../models/menu')
 const Image = require('../models/menu')
 
 /* GET home page. */
-router.get('/store', function (req, res, next) {
-  res.render('index', { title: 'all Stores' });
+router.get('/store', async function (req, res, next) {
+  var store = await Store.find({});
+  res.json(store)
 });
 
 router.post('/store', function (req, res, next) {
@@ -31,12 +32,14 @@ router.post('/store', function (req, res, next) {
   });
 });
 
-router.get('/store/:id', function (req, res, next) {
-  res.render('index', { title: `Store id: ${req.params.id}` });
+router.get('/store/:id', async function (req, res, next) {
+  var store = await Store.findById(req.params.id);
+  res.json(store)
 });
 
-router.get('/menu', function (req, res, next) {
-  res.render('index', { title: 'all Menus' });
+router.get('/menu', async function (req, res, next) {
+  var menu = await Menu.find({});
+  res.json(menu)
 });
 
 router.post('/menu', function (req, res, next) {
@@ -59,8 +62,14 @@ router.post('/menu', function (req, res, next) {
   });
 });
 
-router.get('/menu/:id', function (req, res, next) {
-  res.render('index', { title: `Menu id: ${req.params.id}` });
+router.get('/menu/:id', async function (req, res, next) {
+  var menu = await Menu.findById(req.params.id);
+  res.json(menu)
+});
+
+router.get('/menu/store/:id', async function (req, res, next) {
+  var menu = await Menu.find({ store_id: req.params.id });
+  res.json(menu)
 });
 
 router.post('/order', function (req, res, next) {
