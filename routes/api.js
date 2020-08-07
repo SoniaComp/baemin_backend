@@ -3,6 +3,8 @@ var router = express.Router();
 
 // 모델 불러오기
 const Store = require('../models/store')
+const Menu = require('../models/menu')
+const Image = require('../models/menu')
 
 /* GET home page. */
 router.get('/store', function (req, res, next) {
@@ -38,7 +40,23 @@ router.get('/menu', function (req, res, next) {
 });
 
 router.post('/menu', function (req, res, next) {
-  res.render('index', { title: 'all Menus' });
+  var menu = new Menu();
+  menu.name = req.body.name; // name: { type: String, require: true }, // name char(20)
+  menu.description = req.body.description; // description: { type: String, require: true }, // description text
+  menu.original_price = req.body.original_price; // original_price: { type: Number, require: true }, // original_price int
+  if (req.body.discounted_price) {
+    menu.deiscounted_price = req.body.discounted_price
+  } // discounted_price: { type: Number, default: null },// discounted_price int
+  menu.store_id = req.body.store_id// store: {
+
+  menu.save(function (err) {
+    if (err) {
+      console.error(err);
+      res.json({ result: 'error' });
+      return;
+    }
+    res.json({ result: 'success' });
+  });
 });
 
 router.get('/menu/:id', function (req, res, next) {
